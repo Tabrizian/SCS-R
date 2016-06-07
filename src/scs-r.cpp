@@ -56,10 +56,12 @@ bool* make_reverse_factor_free(char **strs, int size) {
 
     for(int i = 1; i < size; i++) {
         for(int j = 0; j < i; j++) {
-            if(factor(strs[i], strs[j]) || factor(strs[i], reverse(strs[j])))
-                mask[j] = false;
-            else if(factor(strs[j], strs[i]) || factor(strs[j], reverse(strs[i])))
-                mask[i] = false;
+            if(mask[i] && mask[j]) {
+                if(factor(strs[i], strs[j]) || factor(strs[i], reverse(strs[j])))
+                    mask[j] = false;
+                else if(factor(strs[j], strs[i]) || factor(strs[j], reverse(strs[i])))
+                    mask[i] = false;
+            }
         }
     }
 
@@ -110,11 +112,18 @@ int find_max_overlap(bool *mask, char **strs, int size, int *k, int *l) {
 int greedy_r(char **strs, int size) {
     bool *mask = make_reverse_factor_free(strs, size);
 
-    int k,l;
+    int k = -1, l = -1;
     while(size_mask(mask, size) > 1) {
         int max = find_max_overlap(mask, strs, size, &k, &l);
         mask[l] = false;
         strs[k] = concat(strs[k], strs[l]);
+    }
+
+    if(k == -1) {
+        for (int i = 0; i < size; ++i) {
+            if(mask[i])
+                return i;
+        }
     }
 
     return k;
