@@ -38,12 +38,13 @@ bool factor(char *source, char *factor) {
 char* reverse(char *str) {
 
     int len = strlen(str);
-    char* reversal = new char[len];
+    char* reversal = new char[len + 1];
 
     for(int i = 0; i < strlen(str); i++) {
         reversal[i] = str[len - i - 1];
     }
 
+    reversal[strlen(str)] = '\0';
     return reversal;
 }
 
@@ -96,7 +97,8 @@ char* concat(char *str1, char *str2) {
 
 int find_max_over_lap(char *str1, char *str2) {
 
-    char *tmp = new char[strlen(str2)];
+    char *tmp = new char[strlen(str2) + 1];
+    strcpy(tmp, str2);
     int str2_len = strlen(str2);
     for (int i = str2_len - 1; i >= 0; --i) {
         tmp[i] = '\0';
