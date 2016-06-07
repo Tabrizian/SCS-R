@@ -94,16 +94,32 @@ char* concat(char *str1, char *str2) {
     return concated;
 }
 
+int find_max_over_lap(char *str1, char *str2) {
+
+    char *tmp = new char[strlen(str2)];
+    int str2_len = strlen(str2);
+    for (int i = str2_len - 1; i >= 0; --i) {
+        tmp[i] = '\0';
+        if(strstr(str1, tmp) != NULL)
+            return strlen(tmp);
+    }
+
+    return 0;
+}
+
 int find_max_overlap(bool *mask, char **strs, int size, int *k, int *l) {
     int current_max_overlap = 0;
-    for(int i = 1; i < size; i++) {
-        for(int j = 0; j < i; j++) {
+    for (int i = 1; i < size; ++i) {
+
+        for (int j = 0; j < i; ++j) {
+
+
             if(mask[i] && mask[j]) {
-                if(strlen(overlap(strs[i],strs[j])) > current_max_overlap)
-                    current_max_overlap = strlen(overlap(strs[i],strs[j])), *k = i, *l = j;
-                if(strlen(overlap(strs[j],strs[i])) > current_max_overlap)
-                    current_max_overlap = strlen(overlap(strs[j],strs[i])), *k = j, *l = i;
+
+                if(find_max_over_lap(strs[i],strs[j]) > current_max_overlap)
+                    current_max_overlap = find_max_over_lap(strs[i],strs[j]);
             }
+
         }
     }
     return current_max_overlap;
