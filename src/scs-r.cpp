@@ -102,12 +102,15 @@ int find_max_overlap(bool *mask, char **strs, int size, int *k, int *l) {
     return current_max_overlap;
 }
 
-void greedy_r(char **strs, int size) {
+int greedy_r(char **strs, int size) {
     bool *mask = make_reverse_factor_free(strs, size);
+
+    int k,l;
     while(size_mask(mask, size) > 1) {
-        int k,l;
         int max = find_max_overlap(mask, strs, size, &k, &l);
         mask[l] = false;
         strs[k] = concat(strs[l], strs[k]);
     }
+
+    return k;
 }
