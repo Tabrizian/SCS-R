@@ -60,3 +60,54 @@ bool* make_reverse_factor_free(char **strs, int size) {
 
     return mask;
 }
+
+int size_mask(bool *mask, int size) {
+    int num = 0;
+    for(int i = 0; i < size; i++)
+        if(mask[i]) num++;
+    return num;
+}
+
+char* concat(char *str1, char *str2) {
+    char *concated = new char[strlen(str1)+ strlen(str2)];
+
+    strcpy(concated, str1);
+
+    int i = 0;
+    for(; i < strlen(str2); i++) {
+        if(concated[strlen(str1) - 1 - i] != str2[i]) {
+            break;
+        }
+    }
+
+    for(int j = 0; i <= strlen(str2); i++, j++) {
+        concated[strlen(str1) -1 + j] = str2[i];
+    }
+
+    return concated;
+}
+
+int find_max_overlap(bool *mask, char **strs, int size, int *k, int *l) {
+    int current_max_overlap = 0;
+    for(int i = 1; i < size; i++) {
+        for(int j = 0; j < i; j++) {
+            if(mask[i] && mask[j]) {
+                if(strlen(overlap(strs[i],strs[j])) > current_max_overlap)
+                    current_max_overlap = strlen(overlap(strs[i],strs[j])), *k = i, *l = j;
+                if(strlen(overlap(strs[j],strs[i])) > current_max_overlap)
+                    current_max_overlap = strlen(overlap(strs[j],strs[i])), *k = j, *l = i;
+            }
+        }
+    }
+    return current_max_overlap;
+}
+
+void greedy_r(char **strs, int size) {
+    bool *mask = make_reverse_factor_free(strs, size);
+    while(size_mask(mask, size) > 1) {
+        int k,l;
+        int max = find_max_overlap(mask, strs, size, &k, &l);
+        mask[l] = false;
+        strs[k] = concat(strs[l], strs[k]);
+    }
+}

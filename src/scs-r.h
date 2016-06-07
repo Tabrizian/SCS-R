@@ -5,5 +5,6 @@ char* overlap(char *str1, char *str2);
 bool factor(char *source, char *factor);
 bool* make_reverse_factor_free(char **strs, int size);
 char* reverse(char *str);
+int size_mask(bool *mask, int size);
 
 #endif
