@@ -3,6 +3,7 @@
 
 char* overlap(char *str1, char *str2);
 bool factor(char *source, char *factor);
-void make_reverse_factor_free(char **strs, int size);
+bool* make_reverse_factor_free(char **strs, int size);
+char* reverse(char *str);
 
 #endif
