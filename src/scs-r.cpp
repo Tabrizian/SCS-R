@@ -18,8 +18,13 @@ char* overlap(char *str1, char *str2) {
     for(int i = 0; i < min(len_str1, len_str2); i++) {
         if(str1[len_str1 - 1 - i] == str2[i]) {
             str_overlap[i] = str2[i];
+        } else {
+            str_overlap[i] = '\0' ;
+            break;
         }
+
     }
+
 
     return str_overlap;
 }
@@ -27,7 +32,7 @@ char* overlap(char *str1, char *str2) {
 bool factor(char *source, char *factor) {
     char* pointer = strstr(source, factor);
 
-    return pointer == NULL ? true : false;
+    return pointer == NULL ? false : true;
 }
 
 char* reverse(char *str) {
@@ -81,7 +86,7 @@ char* concat(char *str1, char *str2) {
     }
 
     for(int j = 0; i <= strlen(str2); i++, j++) {
-        concated[strlen(str1) -1 + j] = str2[i];
+        concated[strlen(str1) + j] = str2[i];
     }
 
     return concated;
@@ -109,7 +114,7 @@ int greedy_r(char **strs, int size) {
     while(size_mask(mask, size) > 1) {
         int max = find_max_overlap(mask, strs, size, &k, &l);
         mask[l] = false;
-        strs[k] = concat(strs[l], strs[k]);
+        strs[k] = concat(strs[k], strs[l]);
     }
 
     return k;

@@ -1,5 +1,5 @@
-#ifndef SCS-R_H
-#define SCS-R_H
+#ifndef SCS_R_H
+#define SCS_R_H
 
 char* overlap(char *str1, char *str2);
 bool factor(char *source, char *factor);
