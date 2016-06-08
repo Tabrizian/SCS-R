@@ -102,7 +102,17 @@ int find_max_over_lap(char *str1, char *str2) {
     int str2_len = strlen(str2);
     for (int i = str2_len - 1; i >= 0; --i) {
         tmp[i] = '\0';
-        if(strstr(str1, tmp) != NULL)
+        bool is_good = false;
+        if(strstr(str1, tmp) != NULL) {
+            is_good = true;
+            for (int j = 0; j < strlen(tmp); ++j) {
+               if(tmp[j] != str1[j + strlen(str1) - strlen(tmp)]) {
+                   is_good = false;
+                   break;
+               }
+            }
+        }
+        if (is_good)
             return strlen(tmp);
     }
 
@@ -118,8 +128,24 @@ int find_max_overlap(bool *mask, char **strs, int size, int *k, int *l) {
 
             if(mask[i] && mask[j]) {
 
-                if(find_max_over_lap(strs[i],strs[j]) > current_max_overlap)
-                    current_max_overlap = find_max_over_lap(strs[i],strs[j]);
+                if(find_max_over_lap(strs[i],strs[j]) > current_max_overlap) {
+                    current_max_overlap = find_max_over_lap(strs[i], strs[j]);
+                    *l = i;
+                    *k = j;
+                } else if (find_max_over_lap(strs[j],strs[i]) > current_max_overlap) {
+                    current_max_overlap = find_max_over_lap(strs[j], strs[i]);
+                    *l = j;
+                    *k = i;
+                } else if (find_max_over_lap(strs[i],reverse(strs[j])) > current_max_overlap) {
+                    current_max_overlap = find_max_over_lap(strs[i], reverse(strs[j]));
+                    *l = i;
+                    *k = -j;
+
+                } else if (find_max_over_lap(strs[i],reverse(strs[j])) > current_max_overlap) {
+                    current_max_overlap = find_max_over_lap(strs[j], reverse(strs[i]));
+                    *l = j;
+                    *k = -i;
+                }
             }
 
         }
@@ -134,7 +160,13 @@ int greedy_r(char **strs, int size) {
     while(size_mask(mask, size) > 1) {
         int max = find_max_overlap(mask, strs, size, &k, &l);
         mask[l] = false;
-        strs[k] = concat(strs[k], strs[l]);
+        if(l < 0) {
+            strs[k] = concat(strs[k], reverse(strs[l]));
+        } else if (k < 0) {
+            strs[k] = concat(reverse(strs[k]), strs[l]);
+        } else {
+            strs[k] = concat(strs[k], strs[l]);
+        }
     }
 
     if(k == -1) {
